@@ -597,15 +597,10 @@ value.tonemap.tonemap_reinhard_jodie   = Reinhard-Jodie
 
 # Color Grading
 
-option.GRADE_BRIGHTNESS                = Brightness
-option.GRADE_CONTRAST                  = Contrast
-option.GRADE_SATURATION                = Saturation
-option.GRADE_WHITE_BALANCE             = White Balance
 option.GRADE_ORANGE_SAT_BOOST          = Orange Saturation Boost
 option.GRADE_TEAL_SAT_BOOST            = Teal Saturation Boost
 option.GRADE_GREEN_SAT_BOOST           = Green Saturation Boost
 option.GRADE_GREEN_HUE_SHIFT           = Green Hue Shift
-suffix.GRADE_WHITE_BALANCE             = K
 suffix.GRADE_GREEN_HUE_SHIFT           = °
 
 option.PURKINJE_SHIFT                  = Purkinje Shift

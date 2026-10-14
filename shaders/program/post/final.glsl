@@ -12,7 +12,7 @@
 */
 
 #include "/include/global.glsl"
-
+#include "/posterizer.glsl"
 
 //----------------------------------------------------------------------------//
 #if defined vsh
@@ -168,6 +168,8 @@ void main() {
 		scene_color = texture(shadowtex0, uv).rgb;
 	}
 #endif
+
+	scene_color = vec3(posterizer(scene_color));
 }
 
 #endif

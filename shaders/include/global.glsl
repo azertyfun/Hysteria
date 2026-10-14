@@ -1,3 +1,4 @@
+#include "/extra-uniforms.glsl"
 #include "/settings.glsl"
 
 #if MC_VERSION < 11700
