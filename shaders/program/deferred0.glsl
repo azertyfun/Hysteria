@@ -101,6 +101,7 @@ uniform int isEyeInWater;
 uniform vec3 fogColor;
 
 uniform vec3 light_dir;
+uniform vec3 offset_sun_dir;
 uniform vec3 sun_dir;
 uniform vec3 moon_dir;
 

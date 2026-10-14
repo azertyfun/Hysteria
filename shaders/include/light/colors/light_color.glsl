@@ -14,7 +14,9 @@ float get_sun_exposure() {
 
 	float daytime_mul = 1.0 + 0.5 * (time_sunset + time_sunrise) + 40.0 * blue_hour;
 
-	return base_scale * daytime_mul;
+	float eclipse_mul = mix(1.0, 0.7, ECLIPSE_PERCENT);
+
+	return base_scale * daytime_mul * eclipse_mul;
 }
 
 vec3 get_sun_tint() {
@@ -34,6 +36,7 @@ vec3 get_sun_tint() {
 
 	vec3 user_tint = mix(tint_noon, tint_morning, time_sunrise);
 	     user_tint = mix(user_tint, tint_evening, time_sunset);
+	     user_tint = mix(user_tint, vec3(0.2, 0.0, 0.0), ECLIPSE_PERCENT * 0.5);
 
 	return morning_evening_tint * blue_hour_tint * user_tint;
 }

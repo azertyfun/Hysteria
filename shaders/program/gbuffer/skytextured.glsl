@@ -104,6 +104,7 @@ void main() {
 		*/
 
 		scene_color.rgb = texture(gtexture, new_uv).rgb * vec3(MOON_R * 1.2, MOON_G * 1.1, MOON_B);
+		scene_color.rgb = mix(scene_color.rgb, vec3(0.0), ECLIPSE_PERCENT);
 
 		break;
 #else
@@ -156,6 +157,7 @@ void main() {
 			moon * moon_shadow * lit_color,
 			(0.1 * glow_color) * pulse(dist, 0.95, 0.3) // Moon glow
 		);
+		scene_color.rgb = mix(scene_color.rgb, vec3(0.0), ECLIPSE_PERCENT);
 
 		if (dist > 1.3) discard;
 

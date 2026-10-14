@@ -88,7 +88,19 @@ vec3 draw_sun(vec3 ray_dir) {
 	float center_to_edge = max0(sun_angular_radius - fast_acos(nu));
 	vec3 limb_darkening = pow(vec3(1.0 - sqr(1.0 - center_to_edge)), 0.5 * alpha);
 
-	return sun_luminance * sun_color * step(0.0, center_to_edge) * limb_darkening;
+	vec3 regular_sun = sun_luminance * sun_color * step(0.0, center_to_edge) * limb_darkening;
+
+	float offset_nu = dot(ray_dir, offset_sun_dir);
+	float offset_center_to_edge = max0(sun_angular_radius - fast_acos(offset_nu));
+
+	vec3 eclipsed_sun = vec3(0.0);
+	if (1.0 - center_to_edge < 1.0) {
+		if (1.0 - offset_center_to_edge > 0.997) {
+			eclipsed_sun = sun_luminance * sun_color * vec3(1.0, 1.0, 1.0);
+		}
+	}
+
+	return mix(regular_sun, eclipsed_sun, ECLIPSE_PERCENT);
 }
 
 vec4 get_clouds_and_aurora(vec3 ray_dir, vec3 clear_sky) {
@@ -180,10 +192,12 @@ vec2 rot(vec2 r, float a) {
 
 vec3 tentacles(vec3 dir)
 {
-	dir.zy = rot(dir.zy, frameTimeCounter * 0.2);
-	dir.xz = rot(dir.xz, frameTimeCounter * 0.1); dir = dir.yzx;
+	float dt = frameTimeCounter * 0.1;
 
-	vec3 pos = vec3(0, 0, frameTimeCounter * 2.0);
+	dir.zy = rot(dir.zy, dt * 0.2);
+	dir.xz = rot(dir.xz, dt * 0.1); dir = dir.yzx;
+
+	vec3 pos = vec3(0, 0, dt * 2.0);
 	float t = 0.0;
 	for(int i = 0 ; i < MAX_STEP; i++) {
 		float temp = map(pos + dir * t) * 0.55;
@@ -224,7 +238,7 @@ vec3 draw_sky(vec3 ray_dir, vec3 atmosphere) {
 
 	if (vanilla_sky_id == 3) {
 		const vec3 brightness_scale = sunlight_color * moon_luminance;
-		sky *= 0.0; // Hide stars behind moon
+		sky *= mix(0.0, 1.0, ECLIPSE_PERCENT); // Hide stars behind moon
 		sky += vanilla_sky_color * brightness_scale;
 	}
 
@@ -236,10 +250,8 @@ vec3 draw_sky(vec3 ray_dir, vec3 atmosphere) {
 	#endif
 	#endif
 
-	if (SKY_COLOR_SHIFT != vec3(0, 0, 0)) {
-		sky += tentacles(ray_dir) * 0.1;
-		sky += SKY_COLOR_SHIFT;
-	}
+	if (TENTACLES > 0.0)
+		sky += TENTACLES * tentacles(ray_dir);
 
 	// Sky gradient
 
