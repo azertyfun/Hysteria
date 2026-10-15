@@ -96,7 +96,7 @@ vec3 draw_sun(vec3 ray_dir) {
 	vec3 eclipsed_sun = vec3(0.0);
 	if (1.0 - center_to_edge < 1.0) {
 		if (1.0 - offset_center_to_edge > 0.997) {
-			eclipsed_sun = sun_luminance * sun_color * vec3(1.0, 1.0, 1.0);
+			eclipsed_sun = sun_luminance * 2.0 * sun_color * vec3(1.0, 1.0, 1.0);
 		}
 	}
 

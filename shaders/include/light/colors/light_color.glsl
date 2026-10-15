@@ -36,7 +36,7 @@ vec3 get_sun_tint() {
 
 	vec3 user_tint = mix(tint_noon, tint_morning, time_sunrise);
 	     user_tint = mix(user_tint, tint_evening, time_sunset);
-	     user_tint = mix(user_tint, vec3(0.2, 0.0, 0.0), ECLIPSE_PERCENT * 0.5);
+	     user_tint = mix(user_tint, tint_evening, ECLIPSE_PERCENT * 0.3);
 
 	return morning_evening_tint * blue_hour_tint * user_tint;
 }
