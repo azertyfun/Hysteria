@@ -14,7 +14,7 @@ float get_sun_exposure() {
 
 	float daytime_mul = 1.0 + 0.5 * (time_sunset + time_sunrise) + 40.0 * blue_hour;
 
-	float eclipse_mul = mix(1.0, 0.7, ECLIPSE_PERCENT);
+	float eclipse_mul = mix(1.0, 0.7, ECLIPSE_PERCENT) * (1.0 - FULLNIGHT);
 
 	return base_scale * daytime_mul * eclipse_mul;
 }
@@ -44,7 +44,7 @@ vec3 get_sun_tint() {
 float get_moon_exposure() {
 	const float base_scale = 0.66 * MOON_I;
 
-	return base_scale * moon_phase_brightness;
+	return base_scale * moon_phase_brightness * (1.0 - FULLNIGHT);
 }
 
 vec3 get_moon_tint() {

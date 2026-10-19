@@ -9,6 +9,7 @@ uniform float sb_saturation;
 uniform float sb_wb;
 uniform float sb_eclipse_percent;
 uniform float sb_tentacles;
+uniform float sb_fullnight;
 
 #define POSTERIZATION_STRENGTH (sb_posterization + enderman_target * 0.5)
 #define GRADE_BRIGHTNESS sb_brightness
@@ -17,3 +18,4 @@ uniform float sb_tentacles;
 #define GRADE_WHITE_BALANCE sb_wb
 #define ECLIPSE_PERCENT sb_eclipse_percent
 #define TENTACLES sb_tentacles
+#define FULLNIGHT sb_fullnight

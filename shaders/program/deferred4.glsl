@@ -522,7 +522,7 @@ void main() {
 			flat_normal,
 			shadows,
 			light_levels,
-			ao,
+			ao * (1.0 - FULLNIGHT),
 			sss_depth,
 #ifdef CLOUD_SHADOWS
 			cloud_shadows,
