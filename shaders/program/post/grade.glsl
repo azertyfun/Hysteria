@@ -308,14 +308,13 @@ vec3 tonemap_reinhard_jodie(vec3 rgb) {
 }
 
 float vignette(vec2 uv) {
-    const float vignette_size = 16.0;
+    const float vignette_size = 4.0;
     const float vignette_intensity = 0.08 * VIGNETTE_INTENSITY;
 
 	float darkness_pulse = 1.0 - dampen(abs(cos(2.0 * frameTimeCounter)));
 
     float vignette = vignette_size * (uv.x * uv.y - uv.x) * (uv.x * uv.y - uv.y);
-          vignette = pow(vignette, vignette_intensity + 0.1 * biome_cave + 0.3 * blindness + 0.2 * darkness_pulse * darknessFactor);
-
+          vignette = pow(vignette, vignette_intensity + EXTRA_VIGNETTE + 0.1 * biome_cave + 0.3 * blindness + 0.2 * darkness_pulse * darknessFactor);
     return vignette;
 }
 
