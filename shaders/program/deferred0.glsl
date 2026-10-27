@@ -276,6 +276,8 @@ uniform float time_midnight;
 uniform float biome_cave;
 uniform float biome_may_snow;
 
+uniform vec3 offset_sun_dir;
+
 // ------------
 //   Includes
 // ------------
