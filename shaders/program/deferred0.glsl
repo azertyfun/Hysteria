@@ -18,10 +18,10 @@
   const int colortex3Format  = RGBA8;          // full res    | animated overlays/vanilla sky (solid -> deferred3), blended translucent color (translucent -> composite1), bloomy fog amount (composite1 -> composite14)
   const int colortex4Format  = R11F_G11F_B10F; // 192x108     | sky map (deferred -> composite1)
   const int colortex5Format  = RGBA16F;        // full res    | scene history (always)
-  const int colortex6Format  = RGB16F;         // quarter res | ambient occlusion history (always), fog scattering (composite -> composite1 +flip) 
+  const int colortex6Format  = RGB16F;         // quarter res | ambient occlusion history (always), fog scattering (composite -> composite1 +flip)
   const int colortex7Format  = RGB8;           // quarter res | fog transmittance
   const int colortex8Format  = R16;            // 256x256     | cloud shadow map
-  const int colortex9Format  = RGBA16F;        // clouds res  | low-res clouds  
+  const int colortex9Format  = RGBA16F;        // clouds res  | low-res clouds
   const int colortex10Format = R16F;           // clouds res  | low-res clouds apparent distance
   const int colortex11Format = RGBA16F;        // full res    | clouds history
   const int colortex12Format = RG16F;          // full res    | clouds pixel age and apparent distance

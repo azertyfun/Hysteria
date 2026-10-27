@@ -46,6 +46,11 @@ float get_skylight_falloff(float skylight) {
 #endif
 }
 
+float get_custom_falloff(vec3 scene_pos, float ao, float strength) {
+	float falloff = lift(rcp(dot(scene_pos, scene_pos) + 1.0), strength);
+	return falloff * mix(ao, 1.0, falloff * falloff);
+}
+
 #ifdef SHADOW_VPS
 vec3 sss_approx(vec3 albedo, float sss_amount, float sheen_amount, float sss_depth, float LoV, float shadow) {
 	// Transmittance-based SSS
@@ -164,12 +169,12 @@ vec3 get_diffuse_lighting(
 	skylight = 16.0 * directional_lighting * mix(skylight, vec3(dot(skylight, luminance_weights_rec2020)), 0.5);
 #endif
 
-	lighting += skylight * get_skylight_falloff(light_levels.y);
+	lighting += skylight * get_skylight_falloff(light_levels.y) * (1.0 - FULLNIGHT);
 
 	// Blocklight
 
 	float blocklight_falloff = get_blocklight_falloff(light_levels.x, light_levels.y, ao);
-	vec3 mc_blocklight = (blocklight_falloff * directional_lighting) * (blocklight_scale * blocklight_color);
+	vec3 mc_blocklight = (blocklight_falloff * directional_lighting) * (blocklight_scale * blocklight_color) * (1.0 - FULLNIGHT * 0.3);
 
 #ifdef COLORED_LIGHTS
 	lighting += get_lpv_blocklight(scene_pos, flat_normal, mc_blocklight, ao * directional_lighting);
@@ -180,6 +185,11 @@ vec3 get_diffuse_lighting(
 #ifdef HANDHELD_LIGHTING
 	lighting += get_handheld_lighting(scene_pos, ao);
 #endif
+
+	if (PHANTOM_LIGHT.w > 0.1) {
+		vec3 world_space = scene_pos + cameraPosition;
+		lighting += blocklight_color * blocklight_scale * get_custom_falloff(world_space - PHANTOM_LIGHT.xyz, ao, PHANTOM_LIGHT.w) * HANDHELD_LIGHTING_INTENSITY;
+	}
 
 	lighting += material.emission * emission_scale;
 

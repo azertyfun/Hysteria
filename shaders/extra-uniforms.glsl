@@ -1,4 +1,5 @@
-#define SCOREBOARD_FIXED_POINT_BASE 100.0
+#if !defined INCLUDE_EXTRA_UNIFORMS
+#define INCLUDE_EXTRA_UNIFORMS
 
 uniform float enderman_target;
 
@@ -12,6 +13,8 @@ uniform float sb_tentacles;
 uniform float sb_fullnight;
 uniform float sb_vignette;
 
+uniform vec4 sb_phantom_light;
+
 #define POSTERIZATION_STRENGTH (sb_posterization + enderman_target * 0.5)
 #define GRADE_BRIGHTNESS sb_brightness
 #define GRADE_CONTRAST (sb_contrast + enderman_target * 0.5)
@@ -21,3 +24,6 @@ uniform float sb_vignette;
 #define TENTACLES sb_tentacles
 #define FULLNIGHT sb_fullnight
 #define EXTRA_VIGNETTE sb_vignette
+#define PHANTOM_LIGHT sb_phantom_light
+
+#endif

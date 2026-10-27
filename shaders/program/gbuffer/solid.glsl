@@ -60,6 +60,8 @@ uniform mat4 gbufferProjection;
 uniform mat4 gbufferProjectionInverse;
 
 uniform vec3 cameraPosition;
+uniform vec3 cameraPositionInt;
+uniform vec3 cameraPositionFract;
 
 uniform float near;
 uniform float far;

@@ -161,11 +161,11 @@ vec3 hsv2rgb(vec3 c)
 vec3 pin(vec3 v)
 {
 	vec3 q = vec3(0.0);
-	
+
 	q.x = sin(v.x)*0.5+0.5;
 	q.y = sin(v.y+1.0471975511965977461542144610932)*0.5+0.5;
 	q.z = sin(v.z+4.1887902047863909846168473723972)*0.5+0.5;
-	
+
 	return normalize(q);
 }
 
@@ -243,9 +243,9 @@ vec3 draw_sky(vec3 ray_dir, vec3 atmosphere) {
 	}
 
 	#ifdef CUSTOM_SKY
-	
+
 	if (vanilla_sky_id == 4) {
-		sky += vanilla_sky_color * CUSTOM_SKY_BRIGHTNESS;		
+		sky += vanilla_sky_color * CUSTOM_SKY_BRIGHTNESS;
 	}
 	#endif
 	#endif
@@ -348,7 +348,7 @@ vec3 drawEndSkyFeatures(vec3 ray_dir) {
 
 	// Vector from ray dir to sun dir
 	vec2 q = ((ray_dir + sun_dir) * rot).xy;
-	
+
 	float theta = fract(linear_step(-pi, pi, atan(q.y, q.x)) + 0.015 * frameTimeCounter - 0.33 * r);
 
 	float flare1 = texture(noisetex, vec2(theta, r - 0.025 * frameTimeCounter * 1.25)).x;
@@ -369,8 +369,8 @@ vec3 drawEndSkyFeatures(vec3 ray_dir) {
 		getCosmicGlow(ray_dir, 5) +
 		#endif
 		#ifdef END_BLACK_HOLE
-		((vec3(0.0, 0.0, 0.0) * max0(sun_disk) ) * 100 
-		+ flare_color1 * rcp(sun_solid_angle) * max0(0.5 * flare1) 
+		((vec3(0.0, 0.0, 0.0) * max0(sun_disk) ) * 100
+		+ flare_color1 * rcp(sun_solid_angle) * max0(0.5 * flare1)
 		+ flare_color2 * rcp(sun_solid_angle) * max0(1.5 * flare2));
 		#else
 		vec3(0.0);
