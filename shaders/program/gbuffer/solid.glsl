@@ -133,19 +133,23 @@ void main() {
 
 	bool is_top_vertex = uv.y < mc_midTexCoord.y;
 
-	vec3 pos = transform(gl_ModelViewMatrix, gl_Vertex.xyz);
-	     pos = view_to_scene_space(pos);
-	     pos = pos + cameraPosition;
-	     pos = animate_vertex(pos, is_top_vertex, light_levels.y, material_mask);
-	     pos = pos - cameraPosition;
+	vec3 static_view_pos = transform(gl_ModelViewMatrix, gl_Vertex.xyz);
+	vec3 static_scene_pos = view_to_scene_space(static_view_pos);
+	vec3 static_world_pos = static_scene_pos + cameraPosition;
+	vec3 animated_world_pos = animate_vertex(static_world_pos, is_top_vertex, light_levels.y, material_mask);
 
-	scene_pos = pos;
+	if (animated_world_pos.x >= JITTER.x && animated_world_pos.x <= JITTER.x + JITTER.z && animated_world_pos.z >= JITTER.y && animated_world_pos.z <= JITTER.y + JITTER.w ) {
+		vec2 offset = texture(noisetex, floor(animated_world_pos.xz) + floor(animated_world_pos.y) + frameTimeCounter * 0.3).xy - 0.5;
+		animated_world_pos.xz += offset * 0.1 * JITTER_STR;
+	}
+
+	vec3 scene_pos = animated_world_pos - cameraPosition;
 
 #if defined POM && defined PROGRAM_GBUFFERS_TERRAIN
-	tangent_pos = (pos - gbufferModelViewInverse[3].xyz) * tbn;
+	tangent_pos = (scene_pos - gbufferModelViewInverse[3].xyz) * tbn;
 #endif
 
-	vec3 view_pos = scene_to_view_space(pos);
+	vec3 view_pos = scene_to_view_space(scene_pos);
 	vec4 clip_pos = project(gl_ProjectionMatrix, view_pos);
 
 #if   defined TAA && defined TAAU

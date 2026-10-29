@@ -14,6 +14,8 @@ uniform float sb_fullnight;
 uniform float sb_vignette;
 
 uniform vec4 sb_phantom_light;
+uniform vec4 sb_jitter;
+uniform float sb_jitter_str;
 
 #define POSTERIZATION_STRENGTH (sb_posterization + enderman_target * 0.5)
 #define GRADE_BRIGHTNESS sb_brightness
@@ -25,5 +27,7 @@ uniform vec4 sb_phantom_light;
 #define FULLNIGHT sb_fullnight
 #define EXTRA_VIGNETTE sb_vignette
 #define PHANTOM_LIGHT sb_phantom_light
+#define JITTER sb_jitter
+#define JITTER_STR sb_jitter_str
 
 #endif
