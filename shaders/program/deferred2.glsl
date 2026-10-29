@@ -309,7 +309,7 @@ void main() {
 
 	history_weight *= offcenter_rejection;
 #endif
-	
+
 	clouds_history = max0(mix(current, history, history_weight));
 	clouds_data.x = mix(apparent_distance, apparent_distance_history, history_weight);
 	clouds_data.y = min(++pixel_age, CLOUDS_ACCUMULATION_LIMIT);

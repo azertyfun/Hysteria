@@ -28,6 +28,7 @@
   const int colortex13Format = RGB16F;         // full res    | TAAU min color for AABB clipping
   const int colortex14Format = RGB16F;         // full res    | TAAU max color for AABB clipping
   const int colortex15Format = R32F;           // full res    | DH combined depth buffer
+  const int colortex16Format = RGB16F;         // full res    | World position for post-processing effects
 
   const bool colortex0Clear  = false;
   const bool colortex1Clear  = true;

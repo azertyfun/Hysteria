@@ -42,6 +42,14 @@ in vec2 uv;
 // ------------
 
 uniform sampler2D colortex0; // Scene color
+uniform sampler2D noisetex;
+uniform sampler2D depthtex0;
+uniform float near;
+uniform float far;
+
+#if DEBUG_VIEW != DEBUG_VIEW_SAMPLER || DEBUG_SAMPLER != "colortex16"
+uniform sampler2D colortex16; // world_pos
+#endif
 
 #if DEBUG_VIEW == DEBUG_VIEW_SAMPLER
 uniform sampler2D DEBUG_SAMPLER;
@@ -168,6 +176,62 @@ void main() {
 		scene_color = texture(shadowtex0, uv).rgb;
 	}
 #endif
+
+	const int jitter_feather_size_px = 50;
+	vec2 sampling_offsets[5] = vec2[](
+		vec2( 0.0,  0.0),
+		vec2(-2.0, -1.0),
+		vec2(-2.0,  1.0),
+		vec2( 2.0,  1.0),
+		vec2( 2.0, -1.0)
+	);
+	bool jitter = false;
+	float linearDepth;
+	//int dbg = 0;
+	for (int i = 0; i < 5; ++i) {
+		ivec2 offsetTextel = ivec2(texel + sampling_offsets[i] * jitter_feather_size_px);
+		vec3 world_pos = texelFetch(colortex16, offsetTextel, 0).rgb;
+		if (world_pos.x >= JITTER.x && world_pos.x <= JITTER.x + JITTER.z && world_pos.z >= JITTER.y && world_pos.z <= JITTER.y + JITTER.w) {
+			jitter = true;
+			// dbg = i;
+
+			float depth = texelFetch(depthtex0, offsetTextel, 0).r;
+			float ndc = depth * 2.0 - 1.0;
+			float farClip = far * 4.0;
+			linearDepth = (2.0 * near * farClip) / (farClip + near - ndc * (farClip - near));
+
+			break;
+		}
+	}
+	if (jitter) {
+		/* switch (dbg) {
+			case 0:
+				scene_color = vec3(1.0, 0.0, 0.0);
+				break;
+			case 1:
+				scene_color = vec3(0.0, 1.0, 0.0);
+				break;
+			case 2:
+				scene_color = vec3(1.0, 1.0, 1.0);
+				break;
+			case 3:
+				scene_color = vec3(0.0, 0.0, 1.0);
+				break;
+			case 4:
+				scene_color = vec3(1.0, 0.0, 1.0);
+				break;
+		}
+		return; */
+
+		vec3 offset = texture(noisetex, vec2(floor(uv.y * linearDepth * 2.0) / linearDepth / 2.0 + frameTimeCounter * 0.1)).rgb - 0.5;
+		scene_color = display_eotf(
+			vec3(
+				texture(colortex0, vec2(uv.x + offset.r * 0.05 * JITTER_STR, uv.y)).r,
+				texture(colortex0, vec2(uv.x + offset.g * 0.05 * JITTER_STR, uv.y)).g,
+				texture(colortex0, vec2(uv.x + offset.b * 0.05 * JITTER_STR, uv.y)).b
+			)
+		);
+	}
 
 	scene_color = vec3(posterizer(scene_color));
 }

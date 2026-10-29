@@ -20,6 +20,7 @@
 out vec2 uv;
 out vec2 light_levels;
 out vec3 scene_pos;
+out vec3 world_pos;
 out vec4 tint;
 
 flat out uint material_mask;
@@ -137,10 +138,11 @@ void main() {
 	vec3 static_scene_pos = view_to_scene_space(static_view_pos);
 	vec3 static_world_pos = static_scene_pos + cameraPosition;
 	vec3 animated_world_pos = animate_vertex(static_world_pos, is_top_vertex, light_levels.y, material_mask);
+	world_pos = animated_world_pos;
 
 	if (animated_world_pos.x >= JITTER.x && animated_world_pos.x <= JITTER.x + JITTER.z && animated_world_pos.z >= JITTER.y && animated_world_pos.z <= JITTER.y + JITTER.w ) {
 		vec2 offset = texture(noisetex, floor(animated_world_pos.xz) + floor(animated_world_pos.y) + frameTimeCounter * 0.3).xy - 0.5;
-		animated_world_pos.xz += offset * 0.1 * JITTER_STR;
+		// animated_world_pos.xz += offset * 0.1 * JITTER_STR;
 	}
 
 	vec3 scene_pos = animated_world_pos - cameraPosition;
@@ -171,21 +173,23 @@ void main() {
 #if defined fsh
 
 layout (location = 0) out vec4 gbuffer_data_0; // albedo, block ID, flat normal, light levels
-layout (location = 1) out vec4 gbuffer_data_1; // detailed normal, specular map (optional)
+layout (location = 1) out vec4 world_pos_buffer; // world space map for spatial post-processing effects
+layout (location = 2) out vec4 gbuffer_data_1; // detailed normal, specular map (optional)
 
-/* RENDERTARGETS: 1 */
+/* RENDERTARGETS: 1,16 */
 
 #ifdef NORMAL_MAPPING
-/* RENDERTARGETS: 1,2 */
+/* RENDERTARGETS: 1,16,2 */
 #endif
 
 #ifdef SPECULAR_MAPPING
-/* RENDERTARGETS: 1,2 */
+/* RENDERTARGETS: 1,16,2 */
 #endif
 
 in vec2 uv;
 in vec2 light_levels;
 in vec3 scene_pos;
+in vec3 world_pos;
 in vec4 tint;
 
 flat in uint material_mask;
@@ -368,6 +372,8 @@ vec3 draw_end_portal() {
 const float lod_bias = log2(taau_render_scale);
 
 void main() {
+	world_pos_buffer.xyz = world_pos;
+
 #if defined TAA && defined TAAU
 	vec2 coord = gl_FragCoord.xy * view_pixel_size * rcp(taau_render_scale);
 	if (clamp01(coord) != coord) discard;
