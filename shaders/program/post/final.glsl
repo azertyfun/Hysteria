@@ -189,7 +189,7 @@ void main() {
 	float linearDepth;
 	//int dbg = 0;
 	for (int i = 0; i < 5; ++i) {
-		ivec2 offsetTextel = ivec2(texel + sampling_offsets[i] * jitter_feather_size_px);
+		ivec2 offsetTextel = ivec2(texel + sampling_offsets[i] * jitter_feather_size_px * JITTER_STR);
 		vec3 world_pos = texelFetch(colortex16, offsetTextel, 0).rgb;
 		if (world_pos.x >= JITTER.x && world_pos.x <= JITTER.x + JITTER.z && world_pos.z >= JITTER.y && world_pos.z <= JITTER.y + JITTER.w) {
 			jitter = true;
